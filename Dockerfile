@@ -22,6 +22,7 @@ RUN cargo install --path ./ --target-dir /app/bin
 FROM debian:bullseye-slim
 
 COPY --from=build /app/bin/release/artifact-registry-proxy /app/data/
+COPY ./Rocket.toml ./Rocket.toml
 
 RUN apt-get update
 RUN apt-get install pkg-config -y
