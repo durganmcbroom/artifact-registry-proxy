@@ -5,9 +5,9 @@ RUN apt-get install pkg-config -y
 RUN apt-get install openssl -y
 RUN apt-get install libssl-dev -y
 
-RUN USER=root cargo new --bin  /app/build/gcr-artifact-registry-proxy
+RUN USER=root cargo new --bin  /app/build/artifact-registry-proxy
 
-WORKDIR /app/build/gcr-artifact-registry-proxy
+WORKDIR /app/build/artifact-registry-proxy
 
 COPY ./Cargo.toml ./
 COPY ./Cargo.lock ./
@@ -21,7 +21,7 @@ RUN cargo install --path ./ --target-dir /app/bin
 
 FROM debian:bullseye-slim
 
-COPY --from=build /app/bin/release/gcr-artifact-registry-proxy /app/data/
+COPY --from=build /app/bin/release/artifact-registry-proxy /app/data/
 
 RUN apt-get update
 RUN apt-get install pkg-config -y
@@ -37,4 +37,4 @@ RUN gcloud --version
 EXPOSE 8000
 
 WORKDIR /app/data
-ENTRYPOINT ["/app/data/gcr-artifact-registry-proxy"]
+ENTRYPOINT ["/app/data/artifact-registry-proxy"]

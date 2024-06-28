@@ -1,5 +1,5 @@
 [package]
-name = "gcr-artifact-registry-proxy"
+name = "artifact-registry-proxy"
 version = "0.1.0"
 edition = "2021"
 

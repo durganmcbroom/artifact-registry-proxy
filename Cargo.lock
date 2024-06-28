@@ -33,6 +33,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "artifact-registry-proxy"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "bytes",
+ "chrono",
+ "dotenv",
+ "fern",
+ "futures-core",
+ "log",
+ "reqwest",
+ "rocket",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tokio",
+]
+
+[[package]]
 name = "async-stream"
 version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -411,25 +430,6 @@ dependencies = [
  "pin-project-lite",
  "pin-utils",
  "slab",
-]
-
-[[package]]
-name = "gcr-artifact-registry-proxy"
-version = "0.1.0"
-dependencies = [
- "base64",
- "bytes",
- "chrono",
- "dotenv",
- "fern",
- "futures-core",
- "log",
- "reqwest",
- "rocket",
- "serde",
- "serde_json",
- "tempfile",
- "tokio",
 ]
 
 [[package]]
