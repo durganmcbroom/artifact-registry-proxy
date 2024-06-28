@@ -23,6 +23,6 @@ jobs:
       - name: Docker auth
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
       - name: Build image
-        run: docker build ./ --tag ${{ env.GAR_LOCATION }}:latest
+        run: docker build ./ --tag ${{ env.GAR_URL }}:latest
       - name: Push image
-        run: docker push ${{ env.GAR_LOCATION }}:latest
+        run: docker push ${{ env.GAR_URL }}:latest
