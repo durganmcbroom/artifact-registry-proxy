@@ -30,8 +30,8 @@ struct ARProxyConfiguration {
 }
 
 fn setup_configuration<'a>() -> ARProxyConfiguration {
-    let url = env::var("GCP_API_URL").expect(
-        "Cannot find the Google Artifact registry API URL (specified by the environmental variable: 'GCP_API_URL')"
+    let url = env::var("GAR_API_URL").expect(
+        "Cannot find the Google Artifact registry API URL (specified by the environmental variable: 'GAR_API_URL')"
     ).to_string();
 
     let repository_string = env::var("REPOSITORIES").expect(
