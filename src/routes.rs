@@ -53,7 +53,7 @@ pub async fn put_repository_resource<'a>(
     path: PathBuf,
     mut body_file: TempFile<'_>,
     resource_access: &ManagedResourceAccess,
-    configuration: &State<ARProxyConfiguration>,
+    configuration: &State<ARProxyConfiguration>
 ) -> Result<(), status::Custom<Json<BasicError>>> {
     let repository = configuration.repositories.get(repository).ok_or(
         BasicError::from(Box::new(RepositoryNotFound(repository.to_string())))
