@@ -1,20 +1,19 @@
+use std::fs::File;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use bytes::Bytes;
 use log::{debug, info};
 use rocket::{get, put, Responder, State};
 use rocket::fs::TempFile;
 use rocket::http::{Header, Status};
 use rocket::response::status;
 use rocket::response::status::Unauthorized;
-use rocket::response::stream::ByteStream;
 use rocket::serde::json::Json;
 use tempfile::NamedTempFile;
 
 use crate::{ARProxyConfiguration, ManagedResourceAccess};
 use crate::auth::ApiCredentials;
-use crate::err::{BasicError, RepositoryNotFound};
+use crate::err::{BasicError, IOError, RepositoryNotFound};
 
 #[get("/<repository>/<path..>", rank = 3)]
 pub async fn get_repository_resource(
@@ -22,7 +21,7 @@ pub async fn get_repository_resource(
     path: PathBuf,
     resource_access: &ManagedResourceAccess,
     configuration: &State<ARProxyConfiguration>,
-) -> Result<ByteStream![Vec<u8>], status::Custom<Json<BasicError>>> {
+) -> Result<File, status::Custom<Json<BasicError>>> {
     let repository = configuration.repositories.get(repository).ok_or(
         BasicError::from(Box::new(RepositoryNotFound(repository.to_string())))
     )?;
@@ -36,15 +35,14 @@ pub async fn get_repository_resource(
     debug!("Full resource path: '{}'", resource_path.to_str().unwrap());
 
     let arc = Arc::clone(&resource_access);
-    let resource: Bytes = arc.get_resource(
+    let resource_path = arc.get_resource(
         resource_path
-    ).await.map_err(|e|
-    BasicError::from(e)
-    )?;
+    ).await.map_err(|e| BasicError::from(e))?;
 
-    Ok(ByteStream! {
-            yield resource.to_vec();
-    })
+    let file = File::open(resource_path)
+        .map_err(|e| BasicError::from(Box::new(IOError(e))))?;
+
+    Ok(file)
 }
 
 
@@ -69,7 +67,7 @@ pub async fn put_repository_resource<'a>(
 
     debug!("Full resource path: '{}'", resource_path.to_str().unwrap());
 
-    let mut file = NamedTempFile::new()
+    let file = NamedTempFile::new()
         .map_err(|err| status::Custom(
             Status::InternalServerError,
             Json::<BasicError>(err.into()),
@@ -84,9 +82,9 @@ pub async fn put_repository_resource<'a>(
 
     Arc::clone(&resource_access).put_resource(
         resource_path,
-        file.as_file_mut(),
+        file.into_temp_path(),
     ).await.map_err(|e|
-        BasicError::from(e)
+    BasicError::from(e)
     )
 }
 

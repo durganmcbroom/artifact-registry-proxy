@@ -70,7 +70,7 @@ fn setup_configuration<'a>() -> ARProxyConfiguration {
     }
 }
 
-fn setup_logging() -> Result<(), fern::InitError> {
+pub(crate) fn setup_logging() -> Result<(), fern::InitError> {
     fern::Dispatch::new()
         .format(|out, message, record| {
             out.finish(format_args!(

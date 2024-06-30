@@ -1,7 +1,7 @@
-use std::fs::File;
 use std::path::PathBuf;
 
 use rocket::async_trait;
+use tempfile::TempPath;
 
 use crate::err::SerializableError;
 
@@ -10,12 +10,12 @@ pub trait ResourceAccess {
     async fn get_resource(
         & self,
         path: PathBuf
-    ) -> Result<bytes::Bytes, Box<dyn SerializableError>>;
+    ) -> Result<TempPath, Box<dyn SerializableError>>;
 
-    async fn put_resource(
+    async fn  put_resource(
         & self,
         path: PathBuf,
-        file: &mut File,
+        file: TempPath,
     ) -> Result<(), Box<dyn SerializableError>>;
 }
 

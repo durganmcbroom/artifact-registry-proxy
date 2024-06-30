@@ -142,7 +142,7 @@ mod tests {
         let expiration = "2024-06-20T05:00:17Z";
 
         let time = chrono::DateTime::parse_from_rfc3339(expiration)
-            .map_err(|err| ISOParse())?;
+            .map_err(|_| ISOParse())?;
 
         println!("{}", time);
 

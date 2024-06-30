@@ -54,3 +54,20 @@ impl SerializableError for RepositoryNotFound {
         404
     }
 }
+
+#[derive(Debug)]
+pub struct IOError(pub Error);
+
+impl SerializableError for IOError {
+    fn name(&self) -> &'static str {
+        "File system exception"
+    }
+
+    fn message(&self) -> String {
+        self.0.to_string()
+    }
+
+    fn status(&self) -> u16 {
+        500
+    }
+}
